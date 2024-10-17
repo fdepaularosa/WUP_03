@@ -14,8 +14,18 @@ require(tidyverse)
 require(tigerstats)
 davisdata <- read.csv(file="UCDavis.csv")
 ```
-## Our Goal is to answer this question Is there a difference between the alcohol consumed between the row
-## you choose to sit in??
+## Our Goal is to answer this question 
+Is there a difference between the alcohol consumed between the row you choose to sit in??
+
+## Methods
+predict alcohol consumption based on where you sit. 
+
+$H_0$: There is no significant difference in the average alcohol consumption between the different rows.     
+$H_A$: There is a significant difference in the average alcohol consumption between the different rows.       
+
+alcohol is numerical and seat is categorical. 
+
+we use the num~cat helper file. 
 
 ## Now with ggplot - first select the basic data
 
@@ -35,10 +45,45 @@ basicCN + geom_boxplot()
 basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='errorbar') + labs(title="Fancy notch boxplot \n with 2 lines")
 ```
 
+
+boxplot shows the drunks are mostly in the back    
+
+
 ## Numerical Summarys 
+
+```{r}
+favstats(alcohol~Seat,data=ucdavis1)
+```
+
+The average consumption for those sitting in the back is 8.5, which is higher than the 3.8 average for those in the middle and the 6.2 average for those in the front.
+
 
 ## Inferential Tests
 
+```{r}
+model1 <- aov(alcohol~Seat,data=davisdata)
+summary.aov(model1)
+```
+
+the p value is 0.000116 which is lower than 0.05 which means we reject the null hypothesis.     
+
+```{r}
+plot(TukeyHSD(model1))
+```
+
+The tukey test shows us that the middle-front is not different.       
+it also shows that middle-back and front-back are different.       
+
 ## Conclusions
 
+original question: Is there a difference between the alcohol consumed between the row you choose to sit in?    
 
+The data shows that seating location does influence drinking behavior.     
+
+the p value was 0.000116 which is less than 0.05 which means we would reject the null hypothesis.    
+
+The tukey test shows us that the middle-front is not different.           
+it also shows that middle-back and front-back are different.    
+
+the data shows us that seating and alcohol consumption are related.     
+alcohol consumption decreases from the back row to front row. 
